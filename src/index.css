@@ -1,0 +1,63 @@
+:root {
+  --bg: #0b0b0d;
+  --panel: #121319;
+  --text: #9aa0aa;
+  --white: #f6f6f6;
+  --accent: #ff2b2b;
+  --accent-rgb: 255, 43, 43;
+  --line: #2a2d35;
+  --container: 1024px;
+  --header-height: 72px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    "Fira Code",
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    "Liberation Mono",
+    "Courier New",
+    monospace;
+  line-height: 1.55;
+}
+
+::selection {
+  background: rgba(var(--accent-rgb), 0.35);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+#root {
+  min-height: 100%;
+}
