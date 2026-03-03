@@ -51,7 +51,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--tech-muted);
 }
 
 .headerTechItem svg {
@@ -68,7 +68,7 @@
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 1px solid var(--tech-border);
 }
 
 .headerTechLabel {
@@ -161,6 +161,38 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
+}
+
+.headerResumeBtn {
+  padding: 6px 10px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.themeToggle {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+  padding: 6px 10px;
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.themeToggle:hover {
+  background: var(--btn-secondary-hover-bg);
+  color: var(--white);
+}
+
+.themeToggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.themeToggleLabel {
+  font-size: 13px;
 }
 
 .hash {
@@ -310,14 +342,14 @@
 }
 
 .railIcon img {
-  filter: brightness(0) invert(1);
+  filter: var(--icon-filter);
 }
 
 .mobileOverlay {
   position: fixed;
   inset: 0;
   z-index: 20;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--overlay-bg);
   display: grid;
   place-items: start center;
   padding-top: calc(var(--header-height) + 12px);
@@ -374,6 +406,10 @@
   padding-top: 6px;
 }
 
+.mobileResumeBtn {
+  justify-content: center;
+}
+
 .main {
   padding-top: calc(var(--header-height) + 24px);
 }
@@ -388,6 +424,22 @@
   grid-template-columns: 1.15fr 0.85fr;
   gap: 48px;
   align-items: center;
+}
+
+.heroTypeRow {
+  margin-bottom: 10px;
+}
+
+.heroTypeText {
+  color: var(--white) !important;
+  font-size: clamp(14px, 1.8vw, 20px);
+  font-family: inherit;
+  letter-spacing: 0.03em;
+  opacity: 0.92;
+}
+
+.heroTypeText .text-type__cursor {
+  color: var(--accent);
 }
 
 .heroTitle {
@@ -462,8 +514,8 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(80px 120px at 65% 55%, rgba(255, 255, 255, 0.05), transparent 70%),
-    radial-gradient(140px 220px at 55% 65%, rgba(0, 0, 0, 0.35), transparent 68%);
+    radial-gradient(80px 120px at 65% 55%, var(--hero-photo-highlight), transparent 70%),
+    radial-gradient(140px 220px at 55% 65%, var(--hero-photo-shadow), transparent 68%);
   mix-blend-mode: screen;
 }
 
@@ -600,6 +652,14 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.projectCard:hover,
+.projectCard:focus-within {
+  transform: translateY(-8px);
+  border-color: rgba(var(--accent-rgb), 0.5);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.28);
 }
 
 .projectStack {
@@ -623,6 +683,7 @@
 .projectImage {
   height: 160px;
   border-bottom: 1px solid var(--line);
+  overflow: hidden;
 }
 
 .projectImageInner {
@@ -632,14 +693,12 @@
   place-items: center;
   position: relative;
   background:
-    repeating-linear-gradient(
-      135deg,
+    repeating-linear-gradient(135deg,
       rgba(var(--accent-rgb), 0.16),
       rgba(var(--accent-rgb), 0.16) 10px,
-      rgba(255, 255, 255, 0.03) 10px,
-      rgba(255, 255, 255, 0.03) 20px
-    ),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.15), transparent);
+      var(--project-pattern-muted) 10px,
+      var(--project-pattern-muted) 20px),
+    linear-gradient(180deg, var(--project-pattern-shadow), transparent);
 }
 
 .projectThumb {
@@ -649,13 +708,22 @@
   height: 100%;
   object-fit: cover;
   opacity: 0.9;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+
+.projectCard:hover .projectThumb,
+.projectCard:focus-within .projectThumb {
+  transform: scale(1.06);
+  opacity: 1;
 }
 
 .projectImageInner::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.15));
+  background: linear-gradient(180deg,
+      var(--project-image-overlay-top),
+      var(--project-image-overlay-bottom));
 }
 
 .projectImageLabel {
@@ -717,7 +785,7 @@
 }
 
 .btn.secondary:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--btn-secondary-hover-bg);
   color: var(--white);
 }
 
@@ -738,6 +806,14 @@
   background: var(--panel);
   padding: 12px;
   min-width: 0;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.skillCard:hover,
+.skillCard:focus-within {
+  transform: translateY(-6px);
+  border-color: rgba(var(--accent-rgb), 0.5);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
 }
 
 .skillTitle {
@@ -757,6 +833,7 @@
   grid-template-columns: 1.2fr 0.8fr;
   gap: 48px;
   align-items: start;
+  margin-top: 22px;
 }
 
 .aboutText p {
@@ -779,7 +856,7 @@
   line-height: 1.35;
 }
 
-.codingRow + .codingRow {
+.codingRow+.codingRow {
   margin-top: 4px;
 }
 
@@ -790,12 +867,45 @@
 }
 
 .aboutPhoto {
-  width: min(360px, 100%);
-  height: 320px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 12px;
+  width: min(7cm, 100%);
+  height: 7cm;
   border: 1px solid var(--line);
-  background:
-    radial-gradient(60% 55% at 60% 25%, rgba(var(--accent-rgb), 0.14), transparent 60%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(0, 0, 0, 0.1));
+  background-image: url("../images/IMG_6360.jpg");
+  background-size: cover;
+  background-position: center 42%;
+  background-repeat: no-repeat;
+  image-rendering: auto;
+  box-shadow:
+    0 12px 26px rgba(0, 0, 0, 0.22),
+    0 0 18px rgba(200, 80, 80, 0.34);
+  transition: transform 280ms ease, box-shadow 280ms ease, border-color 280ms ease;
+}
+
+.aboutPhoto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 28%, rgba(var(--accent-rgb), 0.24) 50%, transparent 72%);
+  transform: translateX(-130%);
+  transition: transform 680ms ease;
+  pointer-events: none;
+}
+
+.aboutArt:hover .aboutPhoto,
+.aboutArt:focus-within .aboutPhoto {
+  transform: translateY(-2px);
+  border-color: rgba(var(--accent-rgb), 0.55);
+  box-shadow:
+    0 20px 38px rgba(0, 0, 0, 0.34),
+    0 0 28px rgba(200, 80, 80, 0.5);
+}
+
+.aboutArt:hover .aboutPhoto::after,
+.aboutArt:focus-within .aboutPhoto::after {
+  transform: translateX(130%);
 }
 
 .aboutDots {
@@ -804,9 +914,30 @@
   bottom: -18px;
 }
 
+.contactsMainGrid {
+  display: grid;
+  grid-template-columns: 1fr 0.55fr;
+  gap: 16px;
+  margin-top: 18px;
+  align-items: start;
+}
+
+.contactsLeft {
+  display: grid;
+  gap: 16px;
+  align-items: start;
+}
+
+.contactsRight {
+  display: grid;
+  gap: 16px;
+  align-items: start;
+}
+
+/* keep old names in case referenced elsewhere */
 .contactsGrid {
   display: grid;
-  grid-template-columns: 1.3fr 0.7fr;
+  grid-template-columns: 1fr 0.55fr;
   gap: 16px;
   margin-top: 18px;
   align-items: start;
@@ -848,7 +979,7 @@
 }
 
 .contactFormRow {
-  margin-top: 18px;
+  margin-top: 0;
   display: grid;
   grid-template-columns: 1fr 0.55fr;
   gap: 16px;
@@ -913,6 +1044,204 @@
   font-size: 13px;
 }
 
+/* ── ProfileCard ─────────────────────────────────────────────── */
+/* CR80 ID card: 85.6 × 54 mm  →  landscape ratio ≈ 1.586 : 1   */
+.pc-wrapper {
+  position: relative;
+  /* width: CR80 340px − 2cm ≈ 264px */
+  width: min(calc(340px - 2cm), 100%);
+  /* height: natural CR80 height + 1cm extra vertical */
+  height: calc((600px - 2cm) / 1.586 + 1cm);
+}
+
+.pc-behind-glow {
+  position: absolute;
+  inset: -20px;
+  border-radius: 24px;
+  filter: blur(40px);
+  opacity: 0.55;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.pc-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  border: 1px solid color-mix(in oklab, var(--line) 60%, var(--accent) 40%);
+  background: var(--panel);
+  overflow: hidden;
+  will-change: transform;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+}
+
+.pc-inner-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.pc-avatar-wrap {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.pc-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.88) contrast(1.06);
+  user-select: none;
+}
+
+.pc-avatar-placeholder {
+  background: linear-gradient(135deg, var(--panel), color-mix(in oklab, var(--accent) 20%, var(--panel)));
+}
+
+.pc-avatar-gradient {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.pc-status-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  background: color-mix(in oklab, var(--accent) 22%, rgba(0, 0, 0, 0.55));
+  border: 1px solid color-mix(in oklab, var(--accent) 50%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.pc-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 6px #4ade80cc;
+  flex-shrink: 0;
+}
+
+.pc-info {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.pc-name {
+  margin: 0 0 4px;
+  font-size: 18px;
+  color: var(--white);
+  font-weight: 700;
+}
+
+.pc-title {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text);
+  letter-spacing: 0.02em;
+}
+
+.pc-user-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+}
+
+.pc-user-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.pc-mini-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid color-mix(in oklab, var(--accent) 50%, var(--line));
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.pc-mini-avatar-placeholder {
+  background: color-mix(in oklab, var(--accent) 30%, var(--panel));
+}
+
+.pc-user-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.pc-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pc-user-handle {
+  font-size: 11px;
+  color: var(--text);
+  opacity: 0.75;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pc-contact-btn {
+  flex-shrink: 0;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--white);
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.pc-contact-btn:hover {
+  background: rgba(var(--accent-rgb), 0.18);
+  box-shadow: 0 0 12px rgba(var(--accent-rgb), 0.25);
+}
+
+.pc-contact-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── End ProfileCard ─────────────────────────────────────────── */
+
 .siteFooter {
   border-top: 1px solid var(--line);
   padding: 42px 0;
@@ -958,10 +1287,28 @@
   .contactFormRow {
     grid-template-columns: 1fr;
   }
+
+  .contactsMainGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 760px) {
   .navDesktop {
+    display: none;
+  }
+
+  .themeToggle {
+    min-width: 46px;
+    padding: 6px 8px;
+    justify-content: center;
+  }
+
+  .themeToggleLabel {
+    font-size: 12px;
+  }
+
+  .headerResumeBtn {
     display: none;
   }
 
@@ -982,6 +1329,10 @@
     grid-template-columns: 1fr;
   }
 
+  .contactsMainGrid {
+    grid-template-columns: 1fr;
+  }
+
   .footerInner {
     flex-direction: column;
   }
@@ -990,5 +1341,26 @@
 @media (prefers-reduced-motion: reduce) {
   .burger span {
     transition: none;
+  }
+
+  .projectCard,
+  .projectThumb,
+  .skillCard,
+  .aboutPhoto,
+  .aboutPhoto::after {
+    transition: none;
+  }
+
+  .projectCard:hover,
+  .projectCard:focus-within,
+  .skillCard:hover,
+  .skillCard:focus-within,
+  .projectCard:hover .projectThumb,
+  .projectCard:focus-within .projectThumb,
+  .aboutArt:hover .aboutPhoto,
+  .aboutArt:focus-within .aboutPhoto,
+  .aboutArt:hover .aboutPhoto::after,
+  .aboutArt:focus-within .aboutPhoto::after {
+    transform: none;
   }
 }

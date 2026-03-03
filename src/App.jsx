@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import DecryptedText from "./DecryptedText";
+import TextType from "./TextType";
+import ElectricBorder from "./ElectricBorder";
+import ProfileCard from "./ProfileCard";
+import ClickSpark from "./ClickSpark";
 import githubIcon from "../icons/github.png";
 import linkedinIcon from "../icons/linkedin.png";
 import instagramIcon from "../icons/instagram.png";
 import discordIcon from "../icons/discord.png";
-import heroPhotoImg from "../images/dog001.jpg";
+import heroPhotoImg from "../images/IMG_6387.jpg";
 import admlImg from "../images/ADML Text Classification (SVM).png";
 import cryptoImg from "../images/Crypto Darkweb Flow Tracker.jpg";
 import cricketImg from "../images/Cricket Tournament Registration System.avif";
@@ -26,6 +30,7 @@ const PROFILE = {
     linkedin: "https://linkedin.com/in/Rakhul07",
     instagram: "https://instagram.com/_rakhull",
     discordInvite: "https://discord.gg/Rakhul006",
+    resume: "https://drive.google.com/file/d/1nMDkZNYV23SRmRRbCN2Hk3uurTDsZMB3/view?usp=drive_link",
     email: "mailto:prakaash.b2k@gmail.com",
   },
 };
@@ -62,7 +67,6 @@ const PROJECTS = [
     repoHref:
       "https://github.com/Rakhul07/ADML_Text_Classification_using_Support_Vector_Machines_-SVM-",
     language: "Python",
-    stars: 1,
   },
   {
     title: "Crypto Darkweb Flow Tracker",
@@ -72,7 +76,6 @@ const PROJECTS = [
     image: cryptoImg,
     repoHref: "https://github.com/Rakhul07/Crypto-Darkweb-Flow-tracker",
     language: "JavaScript",
-    stars: 2,
   },
   {
     title: "Cricket Tournament Registration System",
@@ -83,7 +86,6 @@ const PROJECTS = [
     repoHref:
       "https://github.com/Rakhul07/Cricket-tournament-registration-System",
     language: "Java",
-    stars: 2,
   },
   {
     title: "Blockchain-Based Voting System",
@@ -93,7 +95,6 @@ const PROJECTS = [
     image: votingImg,
     repoHref: "https://github.com/Rakhul07/Block-Chain-Based-Voting-System",
     language: "JavaScript",
-    stars: 1,
   },
   {
     title: "ZED-ONE",
@@ -103,7 +104,6 @@ const PROJECTS = [
     image: zedImg,
     repoHref: "https://github.com/Rakhul07/ZED-ONE",
     language: "N/A",
-    stars: 2,
   },
   {
     title: "Real-Time Object Detection & Tracking",
@@ -114,7 +114,6 @@ const PROJECTS = [
     repoHref:
       "https://github.com/Rakhul07/Real-Time-Object-Detection-and-Tracking",
     language: "Python",
-    stars: 1,
   },
 ];
 
@@ -126,6 +125,25 @@ const SKILLS = [
   { title: "Tools", items: ["Git", "GitHub", "Apache Maven"] },
   { title: "Creative", items: ["Adobe", "Photoshop", "Blender"] },
 ];
+
+const THEME_STORAGE_KEY = "portfolio-theme";
+const THEMES = {
+  dark: "dark",
+  light: "light",
+};
+
+function getInitialTheme() {
+  if (typeof window === "undefined") return THEMES.dark;
+
+  const savedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
+  if (savedTheme === THEMES.dark || savedTheme === THEMES.light) {
+    return savedTheme;
+  }
+
+  return window.matchMedia("(prefers-color-scheme: light)").matches
+    ? THEMES.light
+    : THEMES.dark;
+}
 
 function LogoMark() {
   return (
@@ -229,7 +247,6 @@ function ProjectCard({ project }) {
         <span>{project.stack}</span>
         <span className="projectMeta">
           <span className="muted">{project.language}</span>
-          <span className="muted">★ {project.stars}</span>
         </span>
       </div>
       <div className="projectImage" aria-hidden="true">
@@ -256,6 +273,7 @@ function ProjectCard({ project }) {
 export default function App() {
   const [activeId, setActiveId] = useState("home");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [theme, setTheme] = useState(() => getInitialTheme());
   const nav = NAV;
 
   useEffect(() => {
@@ -301,10 +319,23 @@ export default function App() {
     if (hash && NAV.some((n) => n.id === hash)) setActiveId(hash);
   }, []);
 
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+  }, [theme]);
+
   const handleNavClick = (e) => {
     if (e.detail !== 0) e.currentTarget.blur();
     setMenuOpen(false);
   };
+
+  const handleThemeToggle = () => {
+    setTheme((prevTheme) =>
+      prevTheme === THEMES.dark ? THEMES.light : THEMES.dark,
+    );
+  };
+
+  const nextThemeLabel = theme === THEMES.dark ? "Light" : "Dark";
 
   const handleContactSubmit = (event) => {
     event.preventDefault();
@@ -322,9 +353,8 @@ export default function App() {
     const message = String(formData.get("message") || "").trim();
 
     const subjectText = title ? title : `Portfolio message from ${name}`;
-    const bodyText = `Name: ${name}\nEmail: ${email}${
-      title ? `\nTitle: ${title}` : ""
-    }\n\nMessage:\n${message}`;
+    const bodyText = `Name: ${name}\nEmail: ${email}${title ? `\nTitle: ${title}` : ""
+      }\n\nMessage:\n${message}`;
 
     const mailToBase = PROFILE.socials.email;
     const separator = mailToBase.includes("?") ? "&" : "?";
@@ -337,7 +367,22 @@ export default function App() {
   };
 
   return (
-    <div className="page">
+    <ClickSpark
+      sparkColor={theme === THEMES.dark ? "#ff2b2b" : "#c41f1f"}
+      sparkSize={11}
+      sparkRadius={20}
+      sparkCount={0}
+      duration={420}
+      easing="ease-out"
+      extraScale={1}
+      trailEnabled
+      trailDuration={240}
+      trailMaxPoints={26}
+      trailMinDistance={4}
+      trailJitter={9}
+      trailWidth={2}
+    >
+      <div className="page">
       <header className="siteHeader">
         <div className="container headerInner">
           <a className="brand" href="#home" onClick={handleNavClick}>
@@ -364,6 +409,23 @@ export default function App() {
           </nav>
 
           <div className="headerRight">
+            <button
+              type="button"
+              className="themeToggle"
+              onClick={handleThemeToggle}
+              aria-label={`Switch to ${nextThemeLabel.toLowerCase()} theme`}
+              title={`Switch to ${nextThemeLabel.toLowerCase()} theme`}
+            >
+              <span className="themeToggleLabel">{nextThemeLabel}</span>
+            </button>
+            <a
+              className="btn secondary headerResumeBtn"
+              href={PROFILE.socials.resume}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Resume
+            </a>
             <button
               type="button"
               className={`burger ${menuOpen ? "open" : ""}`}
@@ -432,9 +494,8 @@ export default function App() {
                 {nav.map((item) => (
                   <li key={item.id}>
                     <a
-                      className={`mobileLink ${
-                        activeId === item.id ? "active" : ""
-                      }`}
+                      className={`mobileLink ${activeId === item.id ? "active" : ""
+                        }`}
                       href={`#${item.id}`}
                       onClick={handleNavClick}
                     >
@@ -445,6 +506,15 @@ export default function App() {
                 ))}
               </ul>
             </nav>
+
+            <a
+              className="btn secondary mobileResumeBtn"
+              href={PROFILE.socials.resume}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Resume
+            </a>
 
             <div className="mobileSocial">
               <a
@@ -492,6 +562,25 @@ export default function App() {
         <section className="section hero" id="home">
           <div className="container heroInner">
             <div className="heroText">
+              <div className="heroTypeRow">
+                <TextType
+                  as="span"
+                  text={[
+                    "Software Developer",
+                    "DSA Practitioner",
+                    "CS Student @ SKCET",
+                    "Open Source Enthusiast",
+                  ]}
+                  typingSpeed={65}
+                  deletingSpeed={35}
+                  pauseDuration={1800}
+                  showCursor
+                  cursorCharacter="_"
+                  cursorBlinkDuration={0.5}
+                  loop
+                  className="heroTypeText"
+                />
+              </div>
               <h1 className="heroTitle">
                 <DecryptedText
                   text={PROFILE.name}
@@ -531,36 +620,37 @@ export default function App() {
               </div>
             </div>
 
-            <div className="heroArt" aria-hidden="true">
-              <div className="heroSquares">
-                <span className="square accentSq" />
-                <span className="square" />
-              </div>
-              <div className="heroPhoto">
-                <img
-                  className="heroPhotoImg"
-                  src={heroPhotoImg}
-                  alt=""
-                  aria-hidden="true"
-                  decoding="async"
-                  loading="eager"
-                />
-              </div>
-              <div className="heroTag">
-                <span className="tagDot" />
-                Currently working on{" "}
-                <span className="white">Personal Portfolio Development</span>
-              </div>
+            <div className="heroArt">
+              <ProfileCard
+                avatarUrl={heroPhotoImg}
+                miniAvatarUrl={heroPhotoImg}
+                name={PROFILE.name}
+                title="Software Developer · CS Student"
+                handle={PROFILE.handle}
+                status="Open to Work"
+                contactText="Contact"
+                showUserInfo
+                enableTilt
+                innerGradient="linear-gradient(145deg, #3a0a0a99 0%, #71C4FF33 100%)"
+                onContactClick={() => { window.location.href = '#contacts'; }}
+              />
             </div>
           </div>
         </section>
 
         <section className="section quote">
           <div className="container quoteInner">
-            <blockquote className="quoteBox">
-              <p>“With great abstraction comes a great debugging session.”</p>
-              <footer className="quoteBy">— Senior Software Engineer, 3:17 a.m.</footer>
-            </blockquote>
+            <ElectricBorder
+              color="#c85050"
+              speed={0.8}
+              chaos={0.1}
+              borderRadius={12}
+            >
+              <blockquote className="quoteBox">
+                <p>“With great abstraction comes a great debugging session.”</p>
+                <footer className="quoteBy">— Senior Software Engineer, 3:17 a.m.</footer>
+              </blockquote>
+            </ElectricBorder>
           </div>
         </section>
 
@@ -601,9 +691,10 @@ export default function App() {
         </section>
 
         <section className="section about" id="about-me">
-          <div className="container aboutInner">
-            <div className="aboutText">
-              <SectionTitle>about-me</SectionTitle>
+          <div className="container">
+            <SectionTitle>about-me</SectionTitle>
+            <div className="aboutInner">
+              <div className="aboutText">
               <p>
                 Hello, I'm <span className="accent">{PROFILE.name}</span>.{" "}
                 {PROFILE.about}
@@ -640,92 +731,96 @@ export default function App() {
               <div className="aboutPhoto" />
             </div>
           </div>
+          </div>
         </section>
 
         <section className="section contacts" id="contacts">
           <div className="container">
             <SectionTitle>contacts</SectionTitle>
-            <div className="contactsGrid">
-              <div className="contactsText">
-                <p>
-                  I am open to freelance opportunities and technical
-                  collaborations. For inquiries, project discussions, or other
-                  requests, feel free to reach out.
-                </p>
+            <div className="contactsMainGrid">
+              {/* Left column: intro text + contact form */}
+              <div className="contactsLeft">
+                <div className="contactsText">
+                  <p>
+                    I am open to freelance opportunities and technical
+                    collaborations. For inquiries, project discussions, or other
+                    requests, feel free to reach out.
+                  </p>
+                </div>
+                <form
+                  className="contactForm"
+                  onSubmit={handleContactSubmit}
+                >
+                  <div className="formGrid">
+                    <label className="field">
+                      <span className="fieldLabel">Name</span>
+                      <input className="input" name="name" autoComplete="name" required />
+                    </label>
+                    <label className="field">
+                      <span className="fieldLabel">Email</span>
+                      <input
+                        className="input"
+                        name="email"
+                        autoComplete="email"
+                        type="email"
+                        required
+                      />
+                    </label>
+                    <label className="field span2">
+                      <span className="fieldLabel">Title</span>
+                      <input className="input" name="title" />
+                    </label>
+                    <label className="field span2">
+                      <span className="fieldLabel">Message</span>
+                      <textarea className="input textarea" name="message" rows={5} required />
+                    </label>
+                  </div>
+                  <button className="btn primary" type="submit">
+                    Send
+                  </button>
+                </form>
               </div>
 
-              <div className="contactsCard">
-                <div className="contactsCardTitle">Message me here</div>
-                <div className="contactsCardRow">
-                  <span className="muted">Discord:</span>{" "}
-                  <a href={PROFILE.socials.discordInvite} target="_blank" rel="noreferrer">
-                    {PROFILE.handle}
-                  </a>
+              {/* Right column: message card + socials card */}
+              <div className="contactsRight">
+                <div className="contactsCard">
+                  <div className="contactsCardTitle">Message me here</div>
+                  <div className="contactsCardRow">
+                    <span className="muted">Discord:</span>{" "}
+                    <a href={PROFILE.socials.discordInvite} target="_blank" rel="noreferrer">
+                      {PROFILE.handle}
+                    </a>
+                  </div>
+                  <div className="contactsCardRow">
+                    <span className="muted">Email:</span>{" "}
+                    <a href={PROFILE.socials.email}>prakaash.b2k@gmail.com</a>
+                  </div>
+                  <div className="contactsCardRow">
+                    <span className="muted">LinkedIn:</span>{" "}
+                    <a href={PROFILE.socials.linkedin} target="_blank" rel="noreferrer">
+                      /in/Rakhul07
+                    </a>
+                  </div>
                 </div>
-                <div className="contactsCardRow">
-                  <span className="muted">Email:</span>{" "}
-                  <a href={PROFILE.socials.email}>prakaash.b2k@gmail.com</a>
-                </div>
-                <div className="contactsCardRow">
-                  <span className="muted">LinkedIn:</span>{" "}
-                  <a href={PROFILE.socials.linkedin} target="_blank" rel="noreferrer">
-                    /in/Rakhul07
-                  </a>
-                </div>
-              </div>
-            </div>
 
-            <div className="contactFormRow">
-              <form
-                className="contactForm"
-                onSubmit={handleContactSubmit}
-              >
-                <div className="formGrid">
-                  <label className="field">
-                    <span className="fieldLabel">Name</span>
-                    <input className="input" name="name" autoComplete="name" required />
-                  </label>
-                  <label className="field">
-                    <span className="fieldLabel">Email</span>
-                    <input
-                      className="input"
-                      name="email"
-                      autoComplete="email"
-                      type="email"
-                      required
-                    />
-                  </label>
-                  <label className="field span2">
-                    <span className="fieldLabel">Title</span>
-                    <input className="input" name="title" />
-                  </label>
-                  <label className="field span2">
-                    <span className="fieldLabel">Message</span>
-                    <textarea className="input textarea" name="message" rows={5} required />
-                  </label>
-                </div>
-                <button className="btn primary" type="submit">
-                  Send
-                </button>
-              </form>
-
-              <div className="supportCard">
-                <div className="contactsCardTitle">Socials</div>
-                <div className="supportRow">
-                  <span className="muted">GitHub:</span>{" "}
-                  <a href={PROFILE.socials.github} target="_blank" rel="noreferrer">
-                    @{PROFILE.handle}
-                  </a>
-                </div>
-                <div className="supportRow">
-                  <span className="muted">Instagram:</span>{" "}
-                  <a
-                    href={PROFILE.socials.instagram}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    @_rakhull
-                  </a>
+                <div className="supportCard">
+                  <div className="contactsCardTitle">Socials</div>
+                  <div className="supportRow">
+                    <span className="muted">GitHub:</span>{" "}
+                    <a href={PROFILE.socials.github} target="_blank" rel="noreferrer">
+                      @{PROFILE.handle}
+                    </a>
+                  </div>
+                  <div className="supportRow">
+                    <span className="muted">Instagram:</span>{" "}
+                    <a
+                      href={PROFILE.socials.instagram}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      @_rakhull
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -777,6 +872,7 @@ export default function App() {
           </div>
         </div>
       </footer>
-    </div>
+      </div>
+    </ClickSpark>
   );
 }

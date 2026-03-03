@@ -6,8 +6,53 @@
   --accent: #ff2b2b;
   --accent-rgb: 255, 43, 43;
   --line: #2a2d35;
+  --tech-muted: rgba(255, 255, 255, 0.7);
+  --tech-border: rgba(255, 255, 255, 0.22);
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+  --icon-filter: brightness(0) invert(1);
+  --hero-photo-highlight: rgba(255, 255, 255, 0.05);
+  --hero-photo-shadow: rgba(0, 0, 0, 0.35);
+  --project-pattern-muted: rgba(255, 255, 255, 0.03);
+  --project-pattern-shadow: rgba(0, 0, 0, 0.15);
+  --project-image-overlay-top: rgba(0, 0, 0, 0.35);
+  --project-image-overlay-bottom: rgba(0, 0, 0, 0.15);
+  --btn-secondary-hover-bg: rgba(255, 255, 255, 0.04);
+  --about-photo-top: rgba(255, 255, 255, 0.04);
+  --about-photo-bottom: rgba(0, 0, 0, 0.1);
   --container: 1024px;
   --header-height: 72px;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  --bg: #f5f7fb;
+  --panel: #ffffff;
+  --text: #2c3340;
+  /* was #4f5969 — much darker muted text */
+  --white: #050709;
+  /* was #10131a — true near-black for headings */
+  --accent: #c41f1f;
+  /* slightly deeper red on light bg */
+  --accent-rgb: 196, 31, 31;
+  --line: #a8b0c0;
+  /* was #d9deea — much darker, visible borders */
+  --tech-muted: rgba(5, 7, 9, 0.78);
+  --tech-border: rgba(5, 7, 9, 0.22);
+  --overlay-bg: rgba(11, 15, 24, 0.32);
+  --icon-filter: none;
+  --hero-photo-highlight: rgba(255, 255, 255, 0.22);
+  --hero-photo-shadow: rgba(16, 19, 26, 0.2);
+  --project-pattern-muted: rgba(16, 19, 26, 0.04);
+  --project-pattern-shadow: rgba(16, 19, 26, 0.08);
+  --project-image-overlay-top: rgba(16, 19, 26, 0.22);
+  --project-image-overlay-bottom: rgba(16, 19, 26, 0.08);
+  --btn-secondary-hover-bg: rgba(16, 19, 26, 0.06);
+  --about-photo-top: rgba(255, 255, 255, 0.2);
+  --about-photo-bottom: rgba(16, 19, 26, 0.08);
+  color-scheme: light;
 }
 
 *,
@@ -40,6 +85,7 @@ body {
     "Courier New",
     monospace;
   line-height: 1.55;
+  transition: background-color 180ms ease, color 180ms ease;
 }
 
 ::selection {
