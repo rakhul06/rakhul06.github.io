@@ -98,6 +98,7 @@ function scrollToSection(id) {
 /* ── Header ─────────────────────────────────────────────── */
 function SiteHeader({ activeSection }) {
   const [timeStr, setTimeStr] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const updateTime = () => {
@@ -116,18 +117,34 @@ function SiteHeader({ activeSection }) {
         <span>{PROFILE.coordinates}</span>
         <span>{timeStr}</span>
       </div>
-      <nav className="siteNav" aria-label="Primary">
+
+      <button
+        className={`mobileMenuToggle ${menuOpen ? "is-open" : ""}`}
+        onClick={() => setMenuOpen(!menuOpen)}
+        aria-label="Toggle menu"
+        aria-expanded={menuOpen}
+      >
+        <span className="bar" />
+        <span className="bar" />
+        <span className="bar" />
+      </button>
+
+      <nav className={`siteNav ${menuOpen ? "is-open" : ""}`} aria-label="Primary">
         {NAV_ITEMS.map((item) => (
           <a
             key={item.id}
             className={`navLink ${activeSection === item.id ? "is-active" : ""}`}
             href={`#${item.id}`}
-            onClick={(e) => { e.preventDefault(); scrollToSection(item.id); }}
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection(item.id);
+              setMenuOpen(false);
+            }}
           >
             {item.label}
           </a>
         ))}
-        <a className="navLink" href={PROFILE.socials.resume} target="_blank" rel="noreferrer">RESUME</a>
+        <a className="navLink" href={PROFILE.socials.resume} target="_blank" rel="noreferrer" onClick={() => setMenuOpen(false)}>RESUME</a>
       </nav>
     </header>
   );

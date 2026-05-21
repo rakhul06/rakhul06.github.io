@@ -80,81 +80,99 @@ export default function HorizontalSlider({ projects }) {
     // translate: center card at 0, others offset by step
     const tx = dist * step;
 
-    // scale: active=1, adjacent=0.82, farther=0.7
-    const scale = absDist < 0.01 ? 1 : absDist < 1.1 ? lerp(1, 0.82, clamp(absDist, 0, 1)) : lerp(0.82, 0.7, clamp(absDist - 1, 0, 1));
+    // scale: active=1, adjacent=0.85, farther=0.72 (reduced range for smoother feel)
+    const scale = absDist < 0.01 ? 1 : absDist < 1.1 ? lerp(1, 0.85, clamp(absDist, 0, 1)) : lerp(0.85, 0.72, clamp(absDist - 1, 0, 1));
 
-    // opacity: active=1, adjacent=0.55, far=0.2
-    const opacity = absDist < 0.01 ? 1 : absDist < 1.1 ? lerp(1, 0.55, clamp(absDist, 0, 1)) : lerp(0.55, 0.18, clamp(absDist - 1, 0, 1));
+    // opacity: active=1, adjacent=0.6, far=0.22
+    const opacity = absDist < 0.01 ? 1 : absDist < 1.1 ? lerp(1, 0.6, clamp(absDist, 0, 1)) : lerp(0.6, 0.2, clamp(absDist - 1, 0, 1));
 
-    // rotateY: slight perspective tilt for side cards
-    const rotateY = clamp(dist * -8, -22, 22);
-
-    // blur during fast motion
-    const blur = absDist > 0.5 ? clamp((absDist - 0.5) * 1.5, 0, 3) : 0;
+    // rotateY: subtle tilt only — small values avoid heavy GPU repaint
+    const rotateY = clamp(dist * -4, -12, 12);
 
     // visible: only show 3 cards on each side
     const visible = absDist < 3.5;
 
-    return { tx, scale, opacity, rotateY, blur, visible };
+    return { tx, scale, opacity, rotateY, visible };
   }, []);
 
-  /* apply transforms to DOM cards each frame */
+  /* apply transforms to DOM cards each frame — batched cssText write to avoid layout thrashing */
   const applyStyles = useCallback((pos) => {
     const vw = window.innerWidth;
     const cardW = (CARD_W_VW / 100) * vw;
     const cardH = cardW / CARD_ASPECT;
+    const wPx = `${cardW}px`;
+    const hPx = `${cardH}px`;
 
     cardsRef.current.forEach((el, idx) => {
       if (!el) return;
       const s = getCardStyle(idx, pos);
 
       if (!s.visible) {
-        el.style.visibility = "hidden";
+        if (el.style.visibility !== 'hidden') el.style.visibility = 'hidden';
         return;
       }
-      el.style.visibility = "visible";
-      el.style.width = `${cardW}px`;
-      el.style.height = `${cardH}px`;
-      el.style.transform = `translate3d(${s.tx}px, 0, 0) scale(${s.scale}) rotateY(${s.rotateY}deg)`;
-      el.style.opacity = s.opacity;
-      el.style.filter = s.blur > 0.2 ? `blur(${s.blur}px)` : "none";
-      el.style.zIndex = Math.round(10 - Math.abs(idx - pos) * 2);
+
+      const transform = `translate3d(${s.tx.toFixed(1)}px,0,0) scale(${s.scale.toFixed(4)}) rotateY(${s.rotateY.toFixed(2)}deg)`;
+      const zIndex = String(Math.round(10 - Math.abs(idx - pos) * 2));
+      const opacity = s.opacity.toFixed(4);
+
+      // Batch all DOM writes into one cssText assignment
+      el.style.cssText = `visibility:visible;width:${wPx};height:${hPx};transform:${transform};opacity:${opacity};z-index:${zIndex};`;
 
       const isActive = Math.abs(idx - pos) < 0.15;
       if (isActive) {
-        el.classList.add("is-active");
+        el.classList.add('is-active');
       } else {
-        el.classList.remove("is-active");
+        el.classList.remove('is-active');
       }
     });
   }, [getCardStyle]);
 
-  /* RAF loop */
+  /* RAF loop — pauses when settled to avoid burning GPU at idle */
   useEffect(() => {
-    const LERP_SPEED = 0.095;
+    const LERP_SPEED = 0.13; // higher = faster settle = fewer paint frames
+    const SETTLE_THRESHOLD = 0.0008;
+    let isRunning = false;
 
-    const loop = () => {
-      posRef.current = lerp(posRef.current, targetRef.current, LERP_SPEED);
-      applyStyles(posRef.current);
-
-      // Update current integer index when settled
-      const rounded = Math.round(posRef.current);
-      const diff = Math.abs(posRef.current - targetRef.current);
-      if (diff < 0.002) {
-        posRef.current = targetRef.current;
-        setCurrent(mod(Math.round(targetRef.current), total));
-      }
-
+    const startLoop = () => {
+      if (isRunning) return;
+      isRunning = true;
+      const loop = () => {
+        const diff = Math.abs(posRef.current - targetRef.current);
+        if (diff < SETTLE_THRESHOLD) {
+          // Settled: snap and stop RAF
+          posRef.current = targetRef.current;
+          applyStyles(posRef.current);
+          setCurrent(mod(Math.round(targetRef.current), total));
+          isRunning = false;
+          return; // do NOT call requestAnimationFrame again
+        }
+        posRef.current = lerp(posRef.current, targetRef.current, LERP_SPEED);
+        applyStyles(posRef.current);
+        rafRef.current = requestAnimationFrame(loop);
+      };
       rafRef.current = requestAnimationFrame(loop);
     };
-    rafRef.current = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(rafRef.current);
+
+    // Expose startLoop so navigation actions can wake it up
+    rafRef._start = startLoop;
+
+    // Initial render
+    startLoop();
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      isRunning = false;
+    };
   }, [applyStyles, total]);
 
   /* navigate */
   const goTo = useCallback((idx) => {
     const wrapped = mod(idx, total);
     targetRef.current = wrapped;
+
+    // Wake up the RAF loop if it was paused (settled)
+    if (rafRef._start) rafRef._start();
 
     // Animate title
     setTitleVisible(false);
