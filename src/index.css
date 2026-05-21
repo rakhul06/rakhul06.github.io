@@ -1,109 +1,70 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Bebas+Neue&family=DM+Sans:ital,wght@0,200;0,300;0,400;1,300&display=swap");
+
 :root {
-  --bg: #0b0b0d;
-  --panel: #121319;
-  --text: #9aa0aa;
-  --white: #f6f6f6;
-  --accent: #ff2b2b;
-  --accent-rgb: 255, 43, 43;
-  --line: #2a2d35;
-  --tech-muted: rgba(255, 255, 255, 0.7);
-  --tech-border: rgba(255, 255, 255, 0.22);
-  --overlay-bg: rgba(0, 0, 0, 0.5);
-  --icon-filter: brightness(0) invert(1);
-  --hero-photo-highlight: rgba(255, 255, 255, 0.05);
-  --hero-photo-shadow: rgba(0, 0, 0, 0.35);
-  --project-pattern-muted: rgba(255, 255, 255, 0.03);
-  --project-pattern-shadow: rgba(0, 0, 0, 0.15);
-  --project-image-overlay-top: rgba(0, 0, 0, 0.35);
-  --project-image-overlay-bottom: rgba(0, 0, 0, 0.15);
-  --btn-secondary-hover-bg: rgba(255, 255, 255, 0.04);
-  --about-photo-top: rgba(255, 255, 255, 0.04);
-  --about-photo-bottom: rgba(0, 0, 0, 0.1);
-  --container: 1024px;
-  --header-height: 72px;
+  --ink:   #060606;
+  --paper: #f3f0e8;
+  --dim:   rgba(243,240,232,0.55);
+  --line:  rgba(243,240,232,0.14);
+  --line-strong: rgba(243,240,232,0.28);
+  --surface: rgba(243,240,232,0.05);
+  --surface-hover: rgba(243,240,232,0.10);
+  --pill: rgba(243,240,232,0.9);
+  --font-display: "Bebas Neue", sans-serif;
+  --font-body:    "Inter", sans-serif;
+  --font-editorial: "DM Sans", sans-serif;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-html[data-theme="dark"] {
-  color-scheme: dark;
-}
-
-html[data-theme="light"] {
-  --bg: #f5f7fb;
-  --panel: #ffffff;
-  --text: #2c3340;
-  /* was #4f5969 — much darker muted text */
-  --white: #050709;
-  /* was #10131a — true near-black for headings */
-  --accent: #c41f1f;
-  /* slightly deeper red on light bg */
-  --accent-rgb: 196, 31, 31;
-  --line: #a8b0c0;
-  /* was #d9deea — much darker, visible borders */
-  --tech-muted: rgba(5, 7, 9, 0.78);
-  --tech-border: rgba(5, 7, 9, 0.22);
-  --overlay-bg: rgba(11, 15, 24, 0.32);
-  --icon-filter: none;
-  --hero-photo-highlight: rgba(255, 255, 255, 0.22);
-  --hero-photo-shadow: rgba(16, 19, 26, 0.2);
-  --project-pattern-muted: rgba(16, 19, 26, 0.04);
-  --project-pattern-shadow: rgba(16, 19, 26, 0.08);
-  --project-image-overlay-top: rgba(16, 19, 26, 0.22);
-  --project-image-overlay-bottom: rgba(16, 19, 26, 0.08);
-  --btn-secondary-hover-bg: rgba(16, 19, 26, 0.06);
-  --about-photo-top: rgba(255, 255, 255, 0.2);
-  --about-photo-bottom: rgba(16, 19, 26, 0.08);
-  color-scheme: light;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  height: 100%;
-}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  background: #000000;
 }
+html::-webkit-scrollbar { display: none; }
 
 body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family:
-    "Fira Code",
-    ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    "Liberation Mono",
-    "Courier New",
-    monospace;
+  background: #000000;
+  color: var(--paper);
+  font-family: var(--font-body);
   line-height: 1.55;
-  transition: background-color 180ms ease, color 180ms ease;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+button, input, textarea { font: inherit; color: inherit; }
 
 ::selection {
-  background: rgba(var(--accent-rgb), 0.35);
+  background: var(--paper);
+  color: var(--ink);
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body {
+  height: auto;
 }
 
-button,
-input,
-textarea {
-  font: inherit;
-  color: inherit;
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
 }
 
-#root {
-  min-height: 100%;
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
