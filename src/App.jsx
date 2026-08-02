@@ -12,8 +12,7 @@ import githubIcon from "../icons/github.png";
 import linkedinIcon from "../icons/linkedin.png";
 import instagramIcon from "../icons/instagram.png";
 import discordIcon from "../icons/discord.png";
-import homeBackdropImg from "../images/ChatGPT Image May 19, 2026, 10_44_36 PM.png";
-import contactsBackdropImg from "../images/ChatGPT Image May 19, 2026, 11_19_35 PM.png";
+import bgImage from "../images/BGimage.jpg";
 import admlImg from "../images/ADML Text Classification (SVM).png";
 import cryptoImg from "../images/Crypto Darkweb Flow Tracker.jpg";
 import cricketImg from "../images/Cricket Tournament Registration System.avif";
@@ -188,8 +187,6 @@ function LoaderScreen({ onDone }) {
 /* ── Home Section ────────────────────────────────────────── */
 function HomeSection({ loaded }) {
   const sectionRef = useRef(null);
-  const bgRef = useRef(null);
-  const bgImgRef = useRef(null);
   const titleRef = useRef(null);
   const roleRef = useRef(null);
   const taglineRef = useRef(null);
@@ -198,31 +195,17 @@ function HomeSection({ loaded }) {
   useEffect(() => {
     if (!loaded) return;
     const ctx = gsap.context(() => {
-      // Parallax bg
-      gsap.to(bgImgRef.current, {
-        yPercent: 20,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1.5,
-        },
-      });
-
       // Intro animations (Down-to-Up transitions)
-      const lines = titleRef.current.querySelectorAll(".line");
       const tl = gsap.timeline({ delay: 0.1 });
       tl.from(metaRef.current, { opacity: 0, y: 18, duration: 0.7, ease: "power3.out" })
-        .from(lines, { opacity: 0, y: 100, stagger: 0.15, duration: 1.3, ease: "power4.out" }, "-=0.3")
+        .from(titleRef.current, { opacity: 0, y: 100, duration: 1.3, ease: "power4.out" }, "-=0.3")
         .from(roleRef.current, { opacity: 0, y: 40, duration: 0.9, ease: "power3.out" }, "-=0.7")
         .from(taglineRef.current, { opacity: 0, y: 40, duration: 0.9, ease: "power3.out" }, "-=0.7");
 
       // Exit: next section slides over
       gsap.to(sectionRef.current, {
         scale: 0.92,
-        opacity: 0.3,
-        filter: "blur(6px)",
+        opacity: 0,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -237,21 +220,16 @@ function HomeSection({ loaded }) {
 
   return (
     <section className="section homeSection" id="home" ref={sectionRef}>
-      <div className="homeBg" ref={bgRef}>
-        <img src={homeBackdropImg} alt="" ref={bgImgRef} loading="eager" />
-        <div className="homeBgOverlay" />
-      </div>
       <div className="homeContent">
         <div className="homeMeta" ref={metaRef}>
           {/* <span>{PROFILE.role.toUpperCase()}</span>
           <span>2026</span> */}
         </div>
-        <h1 className="homeTitle" ref={titleRef}>
-          <span className="line">RAKHUL</span>
-          <span className="line">PRAKAASH</span>
-        </h1>
-        <div className="homeSubRow">
-          <div className="homeRole" ref={roleRef}>SOFTWARE DEVELOPER</div>
+        <div className="homeHeroStack">
+          <h1 className="homeTitle" ref={titleRef}>RAKHUL PRAKAASH</h1>
+          <div className="homeSubRow">
+            <div className="homeRole" ref={roleRef}>SOFTWARE DEVELOPER</div>
+          </div>
           <p className="homeTagline" ref={taglineRef}>{PROFILE.headline}</p>
         </div>
       </div>
@@ -287,8 +265,7 @@ function QuoteSection() {
       // Exit: next section slides over
       gsap.to(sectionRef.current, {
         scale: 0.92,
-        opacity: 0.3,
-        filter: "blur(6px)",
+        opacity: 0,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -353,8 +330,7 @@ function AboutSection() {
       // Exit: next section slides over
       gsap.to(sectionRef.current, {
         scale: 0.92,
-        opacity: 0.3,
-        filter: "blur(6px)",
+        opacity: 0,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -438,7 +414,6 @@ function AboutSection() {
 /* ── Contacts Section ────────────────────────────────────── */
 function ContactsSection() {
   const sectionRef = useRef(null);
-  const bgImgRef = useRef(null);
   const titleRef = useRef(null);
   const topRowRef = useRef(null);
   const quoteRef = useRef(null);
@@ -448,18 +423,6 @@ function ContactsSection() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Parallax bg
-      gsap.to(bgImgRef.current, {
-        yPercent: -12,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1.8,
-        },
-      });
-
       // Direct Channels Top Row: Down-to-Up glide
       gsap.from(topRowRef.current, {
         opacity: 0, y: 35, duration: 0.8, ease: "power3.out",
@@ -490,10 +453,6 @@ function ContactsSection() {
 
   return (
     <section className="section contactSection" id="contacts" ref={sectionRef}>
-      <div className="contactBg">
-        <img src={contactsBackdropImg} alt="" ref={bgImgRef} loading="lazy" />
-        <div className="contactBgOverlay" />
-      </div>
       <div className="inner">
         <div className="contactTopRow" ref={topRowRef}>
           <span>Direct channels</span>
@@ -627,6 +586,10 @@ export default function App() {
           />
         </div>
       )}
+      <div className="siteBackground" aria-hidden="true">
+        <img src={bgImage} alt="" loading="eager" />
+        <div className="siteBackgroundOverlay" />
+      </div>
       <div className="pageShell" style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease" }}>
         <SiteHeader activeSection={activeSection} />
         <HomeSection loaded={loaded} />

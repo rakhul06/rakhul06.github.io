@@ -73,10 +73,12 @@ html, body {
   flex-wrap: wrap;
   align-items: center;
   gap: 14px 24px;
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(243, 240, 232, 0.65);
+  color: #fff;
+  font-weight: 800;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   pointer-events: auto;
 }
 
@@ -96,10 +98,12 @@ html, body {
 
 .navLink {
   position: relative;
-  font-size: 0.72rem;
+  font-size: 0.8rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(243, 240, 232, 0.7);
+  color: #fff;
+  font-weight: 800;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   padding-bottom: 3px;
   transition: color 220ms ease;
   pointer-events: auto;
@@ -132,6 +136,31 @@ html, body {
 .pageShell {
   position: relative;
   overflow-x: hidden;
+  z-index: 2;
+}
+
+.siteBackground {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.siteBackground img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 58%;
+  filter: blur(2px);
+  transform: scale(1.0);
+  transform-origin: center center;
+}
+
+.siteBackgroundOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(6, 6, 6, 0.28) 0%, rgba(6, 6, 6, 0.62) 100%);
 }
 
 /* ── SECTIONS base ──────────────────────────────────────── */
@@ -146,34 +175,9 @@ html, body {
 /* ── HOME ───────────────────────────────────────────────── */
 .homeSection {
   z-index: 1;
-  background: #060606;
+  background: transparent;
   display: grid;
   grid-template-rows: 1fr;
-}
-
-.homeBg {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  will-change: transform;
-}
-
-.homeBg img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 20%;
-  filter: grayscale(100%) contrast(1.08) brightness(0.55);
-  transform: scale(1.08);
-  transform-origin: center center;
-  will-change: transform;
-}
-
-.homeBgOverlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(6, 6, 6, 0.3) 0%, rgba(6, 6, 6, 0.9) 100%);
-  z-index: 1;
 }
 
 .homeContent {
@@ -182,11 +186,24 @@ html, body {
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   padding: 0 28px 48px;
   max-width: 1760px;
   margin: 0 auto;
   width: 100%;
+}
+
+.homeHeroStack {
+  position: absolute;
+  left: 50%;
+  top: calc(72px + 3cm);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1cm;
+  width: calc(100% - 56px);
+  z-index: 3;
 }
 
 .homeMeta {
@@ -194,21 +211,25 @@ html, body {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(243, 240, 232, 0.5);
-  padding-top: clamp(80px, 10vh, 120px);
+  padding-top: 0;
   display: flex;
   gap: 24px;
-  margin-bottom: auto;
+  justify-content: center;
+  margin-bottom: 0;
   will-change: opacity, transform;
 }
 
 .homeTitle {
   font-family: var(--font-display);
-  font-size: clamp(5rem, 16vw, 15.5rem);
+  font-size: clamp(4.8rem, 10vw, 11rem);
   line-height: 0.82;
   text-transform: uppercase;
   color: var(--paper);
-  overflow: hidden;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.07em;
+  text-align: center;
+  white-space: nowrap;
+  max-width: 100%;
+  z-index: 3;
 }
 
 .homeTitle .line {
@@ -224,30 +245,40 @@ html, body {
 
 .homeSubRow {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 24px;
-  margin-top: 28px;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 0;
   flex-wrap: wrap;
+  width: 100%;
+  z-index: 3;
 }
 
 .homeRole {
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 4vw, 3.8rem);
+  font-size: calc(clamp(1.05rem, 1.7vw, 2rem) + 1cm);
   text-transform: uppercase;
-  color: var(--paper);
+  color: #fff;
+  font-weight: 800;
   line-height: 0.9;
+  text-align: center;
+  letter-spacing: 0.2em;
+  white-space: nowrap;
 }
 
 .homeTagline {
-  max-width: 36rem;
-  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  width: 100%;
+  max-width: 44rem;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
   line-height: 1.7;
-  color: rgba(243, 240, 232, 0.65);
+  color: #fff;
   font-family: var(--font-editorial);
-  font-weight: 300;
-  text-align: right;
-  margin-right: 60px;
+  font-weight: 700;
+  text-align: center;
+  margin: 3cm 0 0;
+  padding: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+  text-wrap: balance;
 }
 
 .homeScrollHint {
@@ -262,14 +293,16 @@ html, body {
   font-size: 0.66rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(243, 240, 232, 0.4);
+  color: #fff;
+  font-weight: 800;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
   will-change: opacity;
 }
 
 .scrollLine {
   width: 1px;
   height: 52px;
-  background: linear-gradient(180deg, rgba(243, 240, 232, 0.0) 0%, rgba(243, 240, 232, 0.5) 100%);
+  background: linear-gradient(180deg, rgba(255, 248, 236, 0.0) 0%, rgba(255, 248, 236, 0.9) 100%);
   animation: scrollLineAnim 1.8s ease-in-out infinite;
 }
 
@@ -584,12 +617,25 @@ html, body {
 
 .aboutGrid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1cm;
   align-items: stretch;
-  max-width: 800px;
+  max-width: 1400px;
   width: 100%;
   margin: 0 auto;
+}
+
+.aboutGrid > :first-child {
+  justify-self: start;
+  align-self: start;
+  width: 100%;
+}
+
+.aboutGrid > :last-child {
+  justify-self: end;
+  align-self: start;
+  width: 100%;
+  margin-top: 2cm;
 }
 
 .aboutCopy {
@@ -762,7 +808,7 @@ html, body {
 .contactSection {
   position: relative;
   z-index: 5;
-  background: #060606;
+  background: transparent;
   overflow: visible;
   height: auto;
   min-height: 100svh;
@@ -778,31 +824,6 @@ html, body {
   max-width: 1760px;
   margin: 0 auto;
   padding: clamp(30px, 5vh, 60px) 28px clamp(10px, 2vh, 30px);
-}
-
-.contactBg {
-  position: absolute;
-  inset: -2px 0;
-  overflow: hidden;
-  will-change: transform;
-}
-
-.contactBg img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 120%;
-  object-fit: cover;
-  object-position: center;
-  filter: contrast(1.05) brightness(0.38);
-  will-change: transform;
-}
-
-.contactBgOverlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(6, 6, 6, 0.15) 0%, rgba(6, 6, 6, 0.15) 70%, rgba(6, 6, 6, 0.4) 100%);
 }
 
 .contactTopRow {
@@ -981,15 +1002,17 @@ html, body {
   font-size: 0.68rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(243, 240, 232, 0.4);
+  color: rgba(255, 248, 236, 0.85);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
 }
 
 .footerContent a {
+  color: inherit;
   transition: color 200ms ease;
 }
 
 .footerContent a:hover {
-  color: var(--paper);
+  color: #ffffff;
 }
 
 /* ── Clip reveal mask ────────────────────────────────────── */
@@ -1067,6 +1090,12 @@ html, body {
 
   .aboutGrid {
     grid-template-columns: 1fr;
+    max-width: 800px;
+  }
+
+  .aboutGrid > :last-child {
+    justify-self: stretch;
+    margin-top: 0;
   }
 
   .aboutPortrait {
@@ -1170,9 +1199,11 @@ html, body {
 
   .siteNav .navLink {
     font-family: var(--font-display);
-    font-size: 1.8rem;
+    font-size: 2.25rem;
     letter-spacing: 0.12em;
-    color: rgba(243, 240, 232, 0.65);
+    color: #fff;
+    font-weight: 800;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     transition: color 250ms ease, transform 250ms ease;
   }
 
@@ -1202,12 +1233,30 @@ html, body {
   }
 
   .homeSubRow {
-    flex-direction: column;
-    align-items: flex-start;
+    width: 100%;
+  }
+
+  .homeHeroStack {
+    top: calc(64px + 3cm);
+    width: calc(100vw - 32px);
   }
 
   .homeTagline {
-    text-align: left;
+    width: 100%;
+    max-width: calc(100vw - 32px);
+  }
+
+  .homeTitle {
+    font-size: clamp(3rem, 11vw, 5rem);
+  }
+
+  .homeRole {
+    font-size: calc(clamp(0.9rem, 3.4vw, 1.35rem) + 0.6cm);
+  }
+
+  .homeScrollHint {
+    right: 16px;
+    bottom: 16px;
   }
 
   .codingPanel {
@@ -1246,7 +1295,7 @@ html, body {
 .globalGridBg {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: 1;
   pointer-events: none;
   background: #060606;
 }
