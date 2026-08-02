@@ -12,7 +12,6 @@ import githubIcon from "../icons/github.png";
 import linkedinIcon from "../icons/linkedin.png";
 import instagramIcon from "../icons/instagram.png";
 import discordIcon from "../icons/discord.png";
-import bgImage from "../images/BGimage.jpg";
 import admlImg from "../images/ADML Text Classification (SVM).png";
 import cryptoImg from "../images/Crypto Darkweb Flow Tracker.jpg";
 import cricketImg from "../images/Cricket Tournament Registration System.avif";
@@ -69,7 +68,7 @@ const PROJECTS = [
 ];
 
 const CODING_PROFILES = [
-  { label: "LeetCode", handle: "rakhul06", solved: "253+", href: "https://leetcode.com/u/rakhul06/" },
+  { label: "LeetCode", handle: "rakhul06", solved: "425+", href: "https://leetcode.com/u/rakhul06/" },
   { label: "GeeksforGeeks", handle: "rakhul06", solved: "120+", href: "https://www.geeksforgeeks.org/profile/rakhul06" },
 ];
 
@@ -521,6 +520,7 @@ export default function App() {
   const [loaded, setLoaded] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const lenisRef = useRef(null);
+  const showApp = loaded;
 
   useEffect(() => {
     // Reset scroll restoration on load/reload to manual to prevent automatic jumping
@@ -552,7 +552,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!loaded) return;
+    if (!showApp) return;
 
     // Intersection observer for active nav
     const sections = NAV_ITEMS.map((item) => document.getElementById(item.id)).filter(Boolean);
@@ -568,12 +568,12 @@ export default function App() {
     );
     sections.forEach((s) => io.observe(s));
     return () => io.disconnect();
-  }, [loaded]);
+  }, [showApp]);
 
   return (
     <>
-      {!loaded && <LoaderScreen onDone={() => setLoaded(true)} />}
-      {loaded && (
+      {!showApp && <LoaderScreen onDone={() => setLoaded(true)} />}
+      {showApp && (
         <div className="globalGridBg">
           <ShapeGrid
             speed={0.4}
@@ -586,13 +586,9 @@ export default function App() {
           />
         </div>
       )}
-      <div className="siteBackground" aria-hidden="true">
-        <img src={bgImage} alt="" loading="eager" />
-        <div className="siteBackgroundOverlay" />
-      </div>
-      <div className="pageShell" style={{ opacity: loaded ? 1 : 0, transition: "opacity 0.4s ease" }}>
+      <div className="pageShell" style={{ opacity: showApp ? 1 : 0, transition: "opacity 0.4s ease" }}>
         <SiteHeader activeSection={activeSection} />
-        <HomeSection loaded={loaded} />
+        <HomeSection loaded={showApp} />
         <QuoteSection />
         <WorksSection />
         <AboutSection />
